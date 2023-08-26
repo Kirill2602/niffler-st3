@@ -14,7 +14,7 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
-public class SpendingWebTest {
+public class SpendingWebTest extends BaseWebTest {
     private final String
             USER_NAME = "Kirill",
             PASSWORD = "12345",
