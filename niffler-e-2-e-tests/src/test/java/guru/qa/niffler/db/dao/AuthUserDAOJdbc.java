@@ -4,7 +4,6 @@ import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.ServiceDB;
 import guru.qa.niffler.db.model.Authority;
 import guru.qa.niffler.db.model.AuthorityEntity;
-import guru.qa.niffler.db.model.UserDataEntity;
 import guru.qa.niffler.db.model.UserEntity;
 
 import javax.sql.DataSource;
@@ -15,7 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
+public class AuthUserDAOJdbc implements AuthUserDAO {
 
     private static DataSource authDs = DataSourceProvider.INSTANCE.getDataSource(ServiceDB.AUTH);
     private static DataSource userdataDs = DataSourceProvider.INSTANCE.getDataSource(ServiceDB.USERDATA);
@@ -156,25 +155,5 @@ public class AuthUserDAOJdbc implements AuthUserDAO, UserDataUserDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public UserDataEntity createUserInUserData(UserEntity user) {
-        return null;
-    }
-
-    @Override
-    public UserDataEntity getUserFromUserDataByUsername(String username) {
-        return null;
-    }
-
-    @Override
-    public void updateUserInUserData(UserDataEntity user) {
-
-    }
-
-    @Override
-    public void deleteUserByUsernameInUserData(String username) {
-
     }
 }
