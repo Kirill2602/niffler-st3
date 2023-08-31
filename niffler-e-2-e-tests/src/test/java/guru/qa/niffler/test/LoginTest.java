@@ -1,12 +1,12 @@
 package guru.qa.niffler.test;
 
 import guru.qa.niffler.db.dao.AuthUserDAO;
-import guru.qa.niffler.db.dao.AuthUserDAOJdbc;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
-import guru.qa.niffler.db.dao.UserDataUserDAOJdbc;
+import guru.qa.niffler.db.dao.impl.AuthUserDAOSpringJdbc;
+import guru.qa.niffler.db.dao.impl.UserDataDAOSpringJdbc;
 import guru.qa.niffler.db.jupiter.annotations.DBUser;
-import guru.qa.niffler.db.model.UserDataEntity;
-import guru.qa.niffler.db.model.UserEntity;
+import guru.qa.niffler.db.model.auth.AuthUserEntity;
+import guru.qa.niffler.db.model.userdata.UserDataEntity;
 import guru.qa.niffler.model.CurrencyValues;
 import org.junit.jupiter.api.Test;
 
@@ -17,30 +17,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginTest {
 
-    AuthUserDAO authUserDAO = new AuthUserDAOJdbc();
-    UserDataUserDAO userDataUserDAO = new UserDataUserDAOJdbc();
+    AuthUserDAO authUserDAO = new AuthUserDAOSpringJdbc();
+    UserDataUserDAO userDataUserDAO = new UserDataDAOSpringJdbc();
 
-    @DBUser(username = "Gena", password = "12345")
+    @DBUser
     @Test
-    void mainPageShouldBeVisibleAfterLogin(UserEntity user) {
+    void mainPageShouldBeVisibleAfterLogin(AuthUserEntity user) {
         open("http://127.0.0.1:3000/main");
         $("a[href*='redirect']").click();
         $("input[name='username']").setValue(user.getUsername());
         $("input[name='password']").setValue(user.getPassword());
         $("button[type='submit']").click();
-        $(".main-content__section-stats").should(visible);
+        $(".main-content__section-stats").shouldBe(visible);
     }
 
-    @DBUser(username = "Pavel", password = "12345")
+    @DBUser
     @Test
-    void shouldUpdateUserInAuthDB(UserEntity createdUser) {
+    void shouldUpdateUserInAuthDB(AuthUserEntity createdUser) {
         createdUser.setEnabled(false);
         createdUser.setAccountNonExpired(false);
         createdUser.setAccountNonLocked(false);
         createdUser.setCredentialsNonExpired(false);
         authUserDAO.updateUser(createdUser);
 
-        UserEntity user = authUserDAO.getUserFromAuthUserById(createdUser.getId());
+        AuthUserEntity user = authUserDAO.getUserFromAuthUserById(createdUser.getId());
         assertAll(
                 () -> assertFalse(user.getEnabled()),
                 () -> assertFalse(user.getAccountNonExpired()),
@@ -49,9 +49,9 @@ public class LoginTest {
         );
     }
 
-    @DBUser(username = "ivan", password = "12345")
+    @DBUser
     @Test
-    void shouldUpdateUserInUserDataDB(UserEntity createdUser) {
+    void shouldUpdateUserInUserDataDB(AuthUserEntity createdUser) {
         UserDataEntity user = userDataUserDAO.getUserFromUserDataByUsername(createdUser.getUsername());
         user.setFirstname("Ivan");
         user.setSurname("Ivanov");

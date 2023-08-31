@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.model;
+package guru.qa.niffler.db.model.userdata;
 
 import guru.qa.niffler.model.CurrencyValues;
 
