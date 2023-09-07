@@ -1,9 +1,10 @@
-package guru.qa.niffler.db.dao;
+package guru.qa.niffler.db.dao.impl;
 
 import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.ServiceDB;
-import guru.qa.niffler.db.model.UserDataEntity;
-import guru.qa.niffler.db.model.UserEntity;
+import guru.qa.niffler.db.dao.UserDataUserDAO;
+import guru.qa.niffler.db.model.auth.AuthUserEntity;
+import guru.qa.niffler.db.model.userdata.UserDataEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
 import javax.sql.DataSource;
@@ -17,7 +18,7 @@ public class UserDataUserDAOJdbc implements UserDataUserDAO {
     private static DataSource userdataDs = DataSourceProvider.INSTANCE.getDataSource(ServiceDB.USERDATA);
 
     @Override
-    public UserDataEntity createUserInUserData(UserEntity user) {
+    public UserDataEntity createUserInUserData(AuthUserEntity user) {
         try (Connection conn = userdataDs.getConnection()) {
             PreparedStatement usersPs = conn.prepareStatement(
                     "INSERT INTO users (username, currency) " +
