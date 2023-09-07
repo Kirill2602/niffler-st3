@@ -1,29 +1,40 @@
 package guru.qa.niffler.db.dao.impl;
 
+import guru.qa.niffler.db.ServiceDB;
 import guru.qa.niffler.db.dao.AuthUserDAO;
+import guru.qa.niffler.db.jpa.EntityManagerFactoryProvider;
+import guru.qa.niffler.db.jpa.JpaService;
 import guru.qa.niffler.db.model.auth.AuthUserEntity;
-import guru.qa.niffler.db.model.userdata.UserEntity;
 
 import java.util.UUID;
 
-public class AuthUserDAOHibernate implements AuthUserDAO {
+public class AuthUserDAOHibernate extends JpaService implements AuthUserDAO {
+    public AuthUserDAOHibernate() {
+        super(EntityManagerFactoryProvider.INSTANCE.getDataSource(ServiceDB.AUTH).createEntityManager());
+    }
+
     @Override
     public AuthUserEntity createUser(AuthUserEntity user) {
-        return null;
+        user.setPassword(pe.encode(user.getPassword()));
+        persist(user);
+        return user;
     }
 
     @Override
     public AuthUserEntity getUserFromAuthUserById(UUID userId) {
-        return null;
+        return em.createQuery("select u from AuthUserEntity u where u.id=:userId", AuthUserEntity.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
     }
 
     @Override
     public void updateUser(AuthUserEntity user) {
-
+        merge(user);
     }
 
     @Override
     public void deleteUserByIdInAuth(UUID userId) {
-
+        AuthUserEntity user = getUserFromAuthUserById(userId);
+        remove(user);
     }
 }
