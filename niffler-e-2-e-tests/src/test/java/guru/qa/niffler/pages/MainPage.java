@@ -4,13 +4,14 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 public class MainPage {
-    SelenideElement
+    private final SelenideElement
             mainHeader = $(".main__header"),
             loginButton = $("a[href*='redirect']"),
-            registerButton = $("a[href*='href=http://127.0.0.1:9000/register']");
+            registerButton = $("a[href*='register']");
 
     @Step("Проверить, что заголовок на главной странице содержит текст {value}")
     public MainPage checkMainHeaderText(String value) {
@@ -20,7 +21,13 @@ public class MainPage {
 
     @Step("Кликнуть на кнопку 'Login'")
     public LoginPage clickOnLoginButton() {
-        loginButton.click();
+        loginButton.shouldBe(visible).click();
         return new LoginPage();
+    }
+
+    @Step("Кликнуть на кнопку 'Register'")
+    public RegistrationPage clickOnRegisterButton() {
+        registerButton.click();
+        return new RegistrationPage();
     }
 }

@@ -11,9 +11,9 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class FriendsPage {
-    ElementsCollection
+    private final ElementsCollection
             friendList = $$(".abstract-table tbody tr");
-    SelenideElement
+    private final SelenideElement
             invitationReceived = $("div[data-tooltip-id='submit-invitation']");
 
     @Step("Проверить, что список друзей/запросов в друзья не пустой")

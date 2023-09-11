@@ -88,6 +88,25 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO {
     }
 
     @Override
+    public AuthUserEntity getUserFromAuthByUsername(String username) {
+        AuthUserEntity user = new AuthUserEntity();
+        try {
+            user = authJdbcTemplate.queryForObject(
+                    "SELECT * FROM users WHERE username = ? ",
+                    UserEntityRowMapper.instance,
+                    username
+            );
+            List<AuthorityEntity> authorities = authJdbcTemplate.query(
+                    "SELECT * FROM authorities WHERE user_id = ?", AuthorityEntityRowMapper.instance, user.getId()
+            );
+            user.setAuthorities(authorities);
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException(("User in UserAuth with id " + user.getId() + " not found"));
+        }
+    }
+
+    @Override
     public void updateUser(AuthUserEntity user) {
         authJdbcTemplate.update("UPDATE users " +
                         "SET password = ?, " +
@@ -108,6 +127,15 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO {
         authTtpl.executeWithoutResult(status -> {
             authJdbcTemplate.update("DELETE FROM authorities WHERE user_id = ?", userId);
             authJdbcTemplate.update("DELETE FROM users WHERE id = ?", userId);
+        });
+    }
+
+    @Override
+    public void deleteUserByUsername(String username) {
+        AuthUserEntity user = getUserFromAuthByUsername(username);
+        authTtpl.executeWithoutResult(status -> {
+            authJdbcTemplate.update("DELETE FROM authorities WHERE user_id = ?", user.getId());
+            authJdbcTemplate.update("DELETE FROM users WHERE username = ?", username);
         });
     }
 }

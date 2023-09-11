@@ -4,6 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotations.Category;
 import guru.qa.niffler.jupiter.annotations.Spend;
+import guru.qa.niffler.jupiter.annotations.WebTest;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
+@WebTest
 public class SpendingWebTest extends BaseWebTest {
     private final String
             USER_NAME = "Kirill",
