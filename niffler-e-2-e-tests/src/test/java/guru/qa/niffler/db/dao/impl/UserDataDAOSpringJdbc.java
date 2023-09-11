@@ -1,12 +1,11 @@
 package guru.qa.niffler.db.dao.impl;
 
-import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.ServiceDB;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
-import guru.qa.niffler.db.dao.springjdbc.UserDataEntityRowMapper;
-import guru.qa.niffler.db.model.auth.AuthUserEntity;
+import guru.qa.niffler.db.jdbc.DataSourceProvider;
+import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.userdata.UserDataEntity;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.db.springjdbc.UserDataEntityRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -30,7 +29,7 @@ public class UserDataDAOSpringJdbc implements UserDataUserDAO {
     }
 
     @Override
-    public UserDataEntity createUserInUserData(AuthUserEntity user) {
+    public UserDataEntity createUserInUserData(UserDataEntity user) {
         KeyHolder kh = new GeneratedKeyHolder();
         userdataJdbcTemplate.update(connection -> {
             PreparedStatement usersPs = connection.prepareStatement(

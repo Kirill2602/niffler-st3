@@ -1,16 +1,13 @@
 package guru.qa.niffler.db.dao.impl;
 
-import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.ServiceDB;
 import guru.qa.niffler.db.dao.AuthUserDAO;
-import guru.qa.niffler.db.dao.UserDataUserDAO;
-import guru.qa.niffler.db.dao.springjdbc.AuthorityEntityRowMapper;
-import guru.qa.niffler.db.dao.springjdbc.UserEntityRowMapper;
+import guru.qa.niffler.db.jdbc.DataSourceProvider;
 import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.db.model.auth.Authority;
 import guru.qa.niffler.db.model.auth.AuthorityEntity;
-import guru.qa.niffler.db.model.userdata.UserDataEntity;
-import guru.qa.niffler.db.model.userdata.UserEntity;
+import guru.qa.niffler.db.springjdbc.AuthorityEntityRowMapper;
+import guru.qa.niffler.db.springjdbc.UserEntityRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -107,7 +104,6 @@ public class AuthUserDAOSpringJdbc implements AuthUserDAO {
                 user.getId());
     }
 
-    @Override
     public void deleteUserByIdInAuth(UUID userId) {
         authTtpl.executeWithoutResult(status -> {
             authJdbcTemplate.update("DELETE FROM authorities WHERE user_id = ?", userId);
