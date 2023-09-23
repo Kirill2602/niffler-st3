@@ -8,6 +8,9 @@ import guru.qa.niffler.db.jupiter.annotations.DBUser;
 import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.db.model.userdata.UserDataEntity;
+import guru.qa.niffler.jupiter.annotations.WebTest;
+import guru.qa.niffler.pages.LoginPage;
+import guru.qa.niffler.pages.MainPage;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.visible;
@@ -15,20 +18,22 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.*;
 
+@WebTest
 public class LoginTest {
 
-    AuthUserDAO authUserDAO = new AuthUserDAOHibernate();
-    UserDataUserDAO userDataUserDAO = new UserDataUserDAOHibernate();
+    private final AuthUserDAO authUserDAO = new AuthUserDAOHibernate();
+    private final MainPage mainPage = new MainPage();
+    private final LoginPage loginPage = new LoginPage();
+    private final UserDataUserDAO userDataUserDAO = new UserDataUserDAOHibernate();
     private static final String defaultPassword = "12345";
 
     @DBUser(password = defaultPassword)
     @Test
     void mainPageShouldBeVisibleAfterLogin(AuthUserEntity user) {
         open("http://127.0.0.1:3000/main");
-        $("a[href*='redirect']").click();
-        $("input[name='username']").setValue(user.getUsername());
-        $("input[name='password']").setValue(defaultPassword);
-        $("button[type='submit']").click();
+        mainPage
+                .clickOnLoginButton()
+                .signIn(user.getUsername(), defaultPassword);
         $(".main-content__section-stats").shouldBe(visible);
     }
 
@@ -67,5 +72,25 @@ public class LoginTest {
                 () -> assertEquals("Ivanov", updatedUser.getSurname(), "Surname not updated"),
                 () -> assertEquals(CurrencyValues.USD, updatedUser.getCurrency(), "Currency not updated")
         );
+    }
+
+    @Test
+    @DBUser(password = defaultPassword)
+    void loginWithInvalidPassword(AuthUserEntity user) {
+        open("http://127.0.0.1:9000/login");
+        loginPage
+                .signIn(user.getUsername(), "1111");
+        loginPage
+                .checkErrorText("Неверные учетные данные пользователя");
+    }
+
+    @Test
+    @DBUser(password = defaultPassword)
+    void loginWithInvalidUsername() {
+        open("http://127.0.0.1:9000/login");
+        loginPage
+                .signIn("InvalidUsername", defaultPassword);
+        loginPage
+                .checkErrorText("Неверные учетные данные пользователя");
     }
 }

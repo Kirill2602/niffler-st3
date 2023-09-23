@@ -113,6 +113,45 @@ public class AuthUserDAOJdbc implements AuthUserDAO {
     }
 
     @Override
+    public AuthUserEntity getUserFromAuthByUsername(String username) {
+        AuthUserEntity user = new AuthUserEntity();
+        try (Connection conn = authDs.getConnection()) {
+            try (PreparedStatement authPs = conn.prepareStatement("SELECT * FROM users WHERE username = ?");
+                 PreparedStatement authorityPs = conn.prepareStatement("SELECT * FROM authorities WHERE user_id = ?")) {
+                authPs.setObject(1, username);
+                authorityPs.setObject(1, user.getId());
+                ResultSet authResultSet = authPs.executeQuery();
+                ResultSet authotiryResultSet = authorityPs.executeQuery();
+
+                if (authResultSet.next()) {
+                    user.setId((UUID) authResultSet.getObject("id"));
+                    user.setUsername(authResultSet.getString("username"));
+                    user.setPassword(authResultSet.getString("password"));
+                    user.setEnabled(authResultSet.getBoolean("enabled"));
+                    user.setAccountNonExpired(authResultSet.getBoolean("account_non_expired"));
+                    user.setAccountNonLocked(authResultSet.getBoolean("account_non_locked"));
+                    user.setCredentialsNonExpired(authResultSet.getBoolean("credentials_non_expired"));
+
+                    var authorities = new ArrayList<AuthorityEntity>();
+                    while (authotiryResultSet.next()) {
+                        var a = new AuthorityEntity();
+                        a.setAuthority(Authority.valueOf(authotiryResultSet.getString("authority")));
+                        authorities.add(a);
+                    }
+                    user.setAuthorities(authorities);
+                    return user;
+                } else {
+                    throw new IllegalArgumentException("User in UserAuth with id " + user.getId() + " not found");
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void updateUser(AuthUserEntity user) {
         try (Connection conn = authDs.getConnection()) {
             PreparedStatement usersPs = conn.prepareStatement("UPDATE users SET password = ?, enabled = ?, account_non_expired = ?, " +
@@ -145,6 +184,32 @@ public class AuthUserDAOJdbc implements AuthUserDAO {
 
                 usersPs.setObject(1, userId);
                 authorityPs.setObject(1, userId);
+                authorityPs.executeUpdate();
+                usersPs.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteUserByUsername(String username) {
+         AuthUserEntity user = getUserFromAuthByUsername(username);
+        try (Connection conn = authDs.getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement authorityPs = conn.prepareStatement(
+                    "DELETE FROM authorities WHERE user_id = ?");
+                 PreparedStatement usersPs = conn.prepareStatement(
+                         "DELETE FROM users WHERE username = ?")
+            ) {
+
+                usersPs.setObject(1, username);
+                authorityPs.setObject(1, user.getId());
                 authorityPs.executeUpdate();
                 usersPs.executeUpdate();
                 conn.commit();

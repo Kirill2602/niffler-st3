@@ -8,7 +8,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class AllPeoplePage {
-    SelenideElement
+    private final SelenideElement
             submitInvitation = $("div[data-tooltip-id='submit-invitation']"),
             declineInvitation = $("div[data-tooltip-id='decline-invitation']"),
             pendingInvitation = $(byText("Pending invitation"));

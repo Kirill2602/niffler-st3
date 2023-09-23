@@ -1,6 +1,7 @@
 package guru.qa.niffler.test;
 
 import guru.qa.niffler.jupiter.annotations.User;
+import guru.qa.niffler.jupiter.annotations.WebTest;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.pages.MainPage;
 import guru.qa.niffler.pages.NavigationPage;
@@ -11,9 +12,10 @@ import org.junit.jupiter.api.Test;
 import static com.codeborne.selenide.Selenide.open;
 import static guru.qa.niffler.jupiter.annotations.User.UserType.WITH_FRIENDS;
 
+@WebTest
 public class FriendsWebTest extends BaseWebTest {
-    MainPage mainPage = new MainPage();
-    NavigationPage navigationPage = new NavigationPage();
+    private final MainPage mainPage = new MainPage();
+    private final NavigationPage navigationPage = new NavigationPage();
 
     @BeforeEach
     public void doLogin(@User(userType = WITH_FRIENDS) UserJson userForTest) {
