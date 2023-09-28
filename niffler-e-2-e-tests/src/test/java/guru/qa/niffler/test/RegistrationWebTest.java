@@ -10,10 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.open;
-
-@WebTest
-public class RegistrationWebTest {
-    private final RegistrationPage registrationPage = new RegistrationPage();
+public class RegistrationWebTest extends BaseWebTest{
     private final AuthUserDAO authUserDAO = new AuthUserDAOHibernate();
     private final UserDataUserDAO userDataUserDAO = new UserDataUserDAOHibernate();
 
@@ -22,15 +19,15 @@ public class RegistrationWebTest {
     public void successRegistration() {
         open("http://127.0.0.1:9000/register");
         registrationPage
-                .setUsername("RegistrationUser14")
+                .setUsername("RegistrationUser16")
                 .setPassword("12345")
                 .setSubmitPassword("12345")
                 .clickOnSignUpButton()
                 .checkVisibilityOfSuccessRegisterMessage()
                 .clickOnSignInLink()
                 .checkVisibilityOfSignInText();
-        authUserDAO.deleteUserByUsername("RegistrationUser14");
-        userDataUserDAO.deleteUserByUsernameInUserData("RegistrationUser14");
+        authUserDAO.deleteUserByUsername("RegistrationUser16");
+        userDataUserDAO.deleteUserByUsernameInUserData("RegistrationUser16");
     }
 
     @Test

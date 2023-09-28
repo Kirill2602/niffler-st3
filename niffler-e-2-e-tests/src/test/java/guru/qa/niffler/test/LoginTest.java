@@ -4,13 +4,11 @@ import guru.qa.niffler.db.dao.AuthUserDAO;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
 import guru.qa.niffler.db.dao.impl.AuthUserDAOHibernate;
 import guru.qa.niffler.db.dao.impl.UserDataUserDAOHibernate;
-import guru.qa.niffler.db.jupiter.annotations.DBUser;
 import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.db.model.userdata.UserDataEntity;
-import guru.qa.niffler.jupiter.annotations.WebTest;
-import guru.qa.niffler.pages.LoginPage;
-import guru.qa.niffler.pages.MainPage;
+import guru.qa.niffler.jupiter.annotations.ApiLogin;
+import guru.qa.niffler.jupiter.annotations.DBUser;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.visible;
@@ -18,22 +16,17 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.*;
 
-@WebTest
-public class LoginTest {
+public class LoginTest extends BaseWebTest {
 
     private final AuthUserDAO authUserDAO = new AuthUserDAOHibernate();
-    private final MainPage mainPage = new MainPage();
-    private final LoginPage loginPage = new LoginPage();
     private final UserDataUserDAO userDataUserDAO = new UserDataUserDAOHibernate();
     private static final String defaultPassword = "12345";
 
-    @DBUser(password = defaultPassword)
+    @ApiLogin
+    @DBUser
     @Test
-    void mainPageShouldBeVisibleAfterLogin(AuthUserEntity user) {
-        open("http://127.0.0.1:3000/main");
-        mainPage
-                .clickOnLoginButton()
-                .signIn(user.getUsername(), defaultPassword);
+    void mainPageShouldBeVisibleAfterLogin() {
+        open(CFG.baseUrl() + "/main");
         $(".main-content__section-stats").shouldBe(visible);
     }
 

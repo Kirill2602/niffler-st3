@@ -1,21 +1,19 @@
 package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.jupiter.annotations.ApiLogin;
 import guru.qa.niffler.jupiter.annotations.Category;
 import guru.qa.niffler.jupiter.annotations.Spend;
-import guru.qa.niffler.jupiter.annotations.WebTest;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 
-@WebTest
 public class SpendingWebTest extends BaseWebTest {
     private final String
             USER_NAME = "Kirill",
@@ -29,19 +27,11 @@ public class SpendingWebTest extends BaseWebTest {
         Configuration.browserSize = "1980x1024";
     }
 
-    @BeforeEach
-    void doLogin() {
-        Selenide.open("http://127.0.0.1:3000/main");
-        $("a[href*='redirect']").click();
-        $("input[name='username']").setValue(USER_NAME);
-        $("input[name='password']").setValue(PASSWORD);
-        $("button[type='submit']").click();
-    }
-
     @Category(
             username = USER_NAME,
             category = CATEGORY
     )
+    @ApiLogin(username = USER_NAME, password = PASSWORD)
     @Spend(username = USER_NAME,
             description = DESCRIPTION,
             category = CATEGORY,
@@ -49,6 +39,7 @@ public class SpendingWebTest extends BaseWebTest {
             currency = CurrencyValues.RUB)
     @Test
     void spendingShouldBeDeletedAfterDeleteAction(SpendJson createdSpend) {
+        open(CFG.nifflerFrontUrl() + "/main");
         $(".spendings__content tbody")
                 .$$("tr")
                 .find(text(createdSpend.getDescription()))
