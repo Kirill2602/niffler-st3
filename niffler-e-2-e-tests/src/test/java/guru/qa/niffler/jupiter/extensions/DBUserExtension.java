@@ -1,16 +1,16 @@
-package guru.qa.niffler.db.jupiter.extensions;
+package guru.qa.niffler.jupiter.extensions;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.db.dao.AuthUserDAO;
 import guru.qa.niffler.db.dao.UserDataUserDAO;
 import guru.qa.niffler.db.dao.impl.AuthUserDAOHibernate;
 import guru.qa.niffler.db.dao.impl.UserDataUserDAOHibernate;
-import guru.qa.niffler.db.jupiter.annotations.DBUser;
 import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.auth.AuthUserEntity;
 import guru.qa.niffler.db.model.auth.Authority;
 import guru.qa.niffler.db.model.auth.AuthorityEntity;
 import guru.qa.niffler.db.model.userdata.UserDataEntity;
+import guru.qa.niffler.jupiter.annotations.DBUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.*;
 
@@ -75,8 +75,10 @@ public class DBUserExtension implements BeforeEachCallback, AfterTestExecutionCa
     private AuthUserEntity createAuthUserEntity(DBUser annotation) {
         Faker faker = new Faker();
         AuthUserEntity user = new AuthUserEntity();
+        final String password = annotation.password().isEmpty() ? faker.internet().password() : annotation.password();
         user.setUsername(annotation.username().isEmpty() ? faker.name().username() : annotation.username());
-        user.setPassword(annotation.password().isEmpty() ? faker.internet().password() : annotation.password());
+        user.setPassword(password);
+        user.setEncodedPassword(password);
         user.setEnabled(true);
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);

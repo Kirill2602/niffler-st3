@@ -8,7 +8,15 @@ public interface Config {
         return LocalConfig.config;
     }
 
+    String baseUrl();
+
     String databaseHost();
+
+    String nifflerFrontUrl();
+
+    String nifflerSpendUrl();
+
+    String nifflerAuthUrl();
 
     default String databaseUser() {
         return "postgres";

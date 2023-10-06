@@ -1,30 +1,39 @@
 package guru.qa.niffler.test;
 
-import guru.qa.niffler.db.jupiter.annotations.DBUser;
-import guru.qa.niffler.db.model.auth.AuthUserEntity;
-import guru.qa.niffler.jupiter.annotations.WebTest;
-import guru.qa.niffler.pages.MainPage;
+import guru.qa.niffler.jupiter.annotations.ApiLogin;
+import guru.qa.niffler.jupiter.annotations.DBUser;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.open;
 
-@WebTest
-public class ProfileTest {
-    private final MainPage mainPage = new MainPage();
-    private final String defaultPassword = "12345";
+public class ProfileTest extends BaseWebTest {
+    private final String category = "New Category";
 
     @Test
-    @DBUser(password = "12345")
-    void updateUserProfile(AuthUserEntity user) {
-        open("http://127.0.0.1:3000/main");
-        mainPage
-                .clickOnLoginButton()
-                .signIn(user.getUsername(), defaultPassword)
-                .clickOnProfileLink()
+    @ApiLogin
+    @DBUser
+    @DisplayName("Редактирование данных пользователя")
+    void updateUserProfile() {
+        open(CFG.baseUrl() + "/profile");
+        profilePage
                 .setName("Test")
                 .setSurname("Testov")
                 .setCurrency("USD")
                 .clickOnSubmitButton()
                 .checkVisibilityOfSuccessProfileUpdateMessage("Profile updated!");
+    }
+
+    @Test
+    @ApiLogin
+    @DBUser
+    @DisplayName("Добавление новой категории трат в профиле")
+    public void addNewCategory() {
+        open(CFG.baseUrl() + "/profile");
+        profilePage
+                .setNewCategory(category)
+                .clickOnCreateButton()
+                .checkSuccessAddedNewCategory(category)
+                .checkCategoryList(category);
     }
 }

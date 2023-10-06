@@ -12,11 +12,7 @@ import org.junit.jupiter.api.Test;
 import static com.codeborne.selenide.Selenide.open;
 import static guru.qa.niffler.jupiter.annotations.User.UserType.WITH_FRIENDS;
 
-@WebTest
 public class FriendsWebTest extends BaseWebTest {
-    private final MainPage mainPage = new MainPage();
-    private final NavigationPage navigationPage = new NavigationPage();
-
     @BeforeEach
     public void doLogin(@User(userType = WITH_FRIENDS) UserJson userForTest) {
         open("http://127.0.0.1:3000/");
