@@ -1,10 +1,7 @@
-package guru.qa.niffler.test;
+package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.jupiter.annotations.User;
-import guru.qa.niffler.jupiter.annotations.WebTest;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.pages.MainPage;
-import guru.qa.niffler.pages.NavigationPage;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

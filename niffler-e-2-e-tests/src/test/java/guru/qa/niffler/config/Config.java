@@ -18,6 +18,10 @@ public interface Config {
 
     String nifflerAuthUrl();
 
+    String currencyGrpcAddress();
+
+    int currencyGrpcPort();
+
     default String databaseUser() {
         return "postgres";
     }
