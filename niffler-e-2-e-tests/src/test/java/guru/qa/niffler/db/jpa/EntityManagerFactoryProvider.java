@@ -1,10 +1,11 @@
 package guru.qa.niffler.db.jpa;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.db.ServiceDB;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import guru.qa.niffler.config.Config;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,5 +32,9 @@ public enum EntityManagerFactoryProvider {
                     );
             return entityManagerFactory;
         });
+    }
+
+    public Collection<EntityManagerFactory> allStoredEntityManagerFactories() {
+        return dataSourceStore.values();
     }
 }

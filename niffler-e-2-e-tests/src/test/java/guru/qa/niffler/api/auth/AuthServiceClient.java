@@ -1,6 +1,7 @@
-package guru.qa.niffler.api;
+package guru.qa.niffler.api.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import guru.qa.niffler.api.RestService;
 import guru.qa.niffler.api.context.CookieContext;
 import guru.qa.niffler.api.context.SessionStorageContext;
 import guru.qa.niffler.api.interceptor.AddCookieInterceptor;

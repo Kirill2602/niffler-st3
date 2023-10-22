@@ -8,7 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-public class RestService {
+public abstract class RestService {
     protected static final Config CFG = Config.getInstance();
     protected final OkHttpClient httpClient;
 
