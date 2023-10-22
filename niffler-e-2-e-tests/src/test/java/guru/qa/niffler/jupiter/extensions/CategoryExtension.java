@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.extensions;
 
-import guru.qa.niffler.api.CategoryService;
+import guru.qa.niffler.api.category.CategoryService;
 import guru.qa.niffler.jupiter.annotations.Spend;
 import guru.qa.niffler.model.CategoryJson;
 import okhttp3.OkHttpClient;

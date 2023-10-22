@@ -17,6 +17,7 @@ public interface Config {
     String nifflerSpendUrl();
 
     String nifflerAuthUrl();
+    String nifflerUserdataUrl();
 
     String currencyGrpcAddress();
 
